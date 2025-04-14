@@ -180,6 +180,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function drawPoints() {
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         
+        // Dibujar regiones de clasificación si existe la línea o curva definida
+        if (points.length >= 2) {
+            drawClassificationRegions();
+        }
+        
         // Dibujar ejes
         drawAxes();
         
@@ -546,6 +551,28 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const accuracy = (correct / testData.length * 100).toFixed(1);
         testAccuracyEl.textContent = `${accuracy}%`;
+    }
+    
+    // Función para dibujar las regiones de clasificación
+    function drawClassificationRegions() {
+        if (points.length < 2) return;
+        
+        const gridSize = 10; // Tamaño del bloque para la rejilla
+        for (let y = 0; y < canvasHeight; y += gridSize) {
+            for (let x = 0; x < canvasWidth; x += gridSize) {
+                // Calculamos el centro del bloque
+                const dataPoint = canvasToData(x + gridSize / 2, y + gridSize / 2);
+                const fakePoint = {
+                    bill_length_mm: dataPoint.x,
+                    bill_depth_mm: dataPoint.y
+                };
+                const predicted = classifyPoint(fakePoint);
+                if (predicted) {
+                    ctx.fillStyle = predicted === 'Adelie' ? 'rgba(52, 152, 219, 0.1)' : 'rgba(231, 76, 60, 0.1)';
+                    ctx.fillRect(x, y, gridSize, gridSize);
+                }
+            }
+        }
     }
     
     // Iniciar la aplicación
