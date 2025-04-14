@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clasificador Interactivo - Machine Learning</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Clasificador Interactivo de Pingüinos</h1>
+        <div class="description">
+            <p>Dibuja una línea para separar las dos especies de pingüinos (Adelie y Chinstrap) basándote en las medidas del pico.</p>
+            <p>Ejes: X = bill_length_mm (longitud del pico), Y = bill_depth_mm (profundidad del pico)</p>
+        </div>
+
+        <div class="controls">
+            <div class="drawing-options">
+                <button id="line-btn" class="active">Línea Recta</button>
+                <button id="curve-btn">Línea Curva</button>
+                <button id="clear-btn">Borrar</button>
+            </div>
+
+            <div class="equation-display">
+                <p>Ecuación: <span id="line-equation">-</span></p>
+            </div>
+
+            <div class="evaluation">
+                <div class="dataset-toggles">
+                    <label><input type="checkbox" id="show-train" checked> Mostrar entrenamiento</label>
+                    <label><input type="checkbox" id="show-test"> Mostrar test</label>
+                </div>
+                <div class="metrics">
+                    <p>Accuracy (Entrenamiento): <span id="train-accuracy">-</span></p>
+                </div>
+                <button id="evaluate-btn">Evaluar en Datos de Test</button>
+                <div class="metrics">
+                    <p>Accuracy (Test): <span id="test-accuracy">-</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="canvas-container">
+            <canvas id="scatter-plot"></canvas>
+            <div class="legend">
+                <div class="legend-item">
+                    <span class="color-box adelie"></span>
+                    <span>Adelie</span>
+                </div>
+                <div class="legend-item">
+                    <span class="color-box chinstrap"></span>
+                    <span>Chinstrap</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>Instrucciones:</h3>
+            <ol>
+                <li>Selecciona el tipo de línea (recta o curva)</li>
+                <li>Haz clic en el canvas para comenzar a dibujar</li>
+                <li>Para línea recta: haz clic en dos puntos</li>
+                <li>Para curva: haz clic en varios puntos (mínimo 3)</li>
+                <li>Observa el accuracy en datos de entrenamiento</li>
+                <li>Haz clic en "Evaluar" para ver el rendimiento en datos de test</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
