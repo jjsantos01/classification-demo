@@ -361,6 +361,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Manejo de eventos de ratón
     function handleMouseDown(e) {
+        // Seleccionar solo el checkbox de entrenamiento
+        showTrainCheckbox.checked = true;
+        showTestCheckbox.checked = false;
+        
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
