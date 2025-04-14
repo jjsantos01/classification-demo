@@ -219,16 +219,28 @@ document.addEventListener('DOMContentLoaded', function() {
         if (showTestCheckbox.checked) {
             testData.forEach(point => {
                 const canvasPoint = dataToCanvas(point.bill_length_mm, point.bill_depth_mm);
+                const predicted = classifyPoint(point);
                 
-                ctx.beginPath();
-                ctx.arc(canvasPoint.x, canvasPoint.y, pointRadius, 0, Math.PI * 2);
-                ctx.fillStyle = colors[point.species];
-                ctx.fill();
-                
-                // Añadir un borde para distinguir puntos de test
-                ctx.strokeStyle = '#333';
-                ctx.lineWidth = 1;
-                ctx.stroke();
+                if (predicted !== point.species) {
+                    // La predicción fue incorrecta, dibujar una "X" con el color de la clase verdadera
+                    ctx.strokeStyle = colors[point.species];
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(canvasPoint.x - pointRadius, canvasPoint.y - pointRadius);
+                    ctx.lineTo(canvasPoint.x + pointRadius, canvasPoint.y + pointRadius);
+                    ctx.moveTo(canvasPoint.x + pointRadius, canvasPoint.y - pointRadius);
+                    ctx.lineTo(canvasPoint.x - pointRadius, canvasPoint.y + pointRadius);
+                    ctx.stroke();
+                } else {
+                    // Predicción correcta, dibujar el símbolo de palomita
+                    // Establecer fuente y color
+                    ctx.font = `${pointRadius * 4}px Arial`;
+                    ctx.fillStyle = colors[point.species];
+                    // Ajustar posición para centrar el símbolo en canvasPoint
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('✓', canvasPoint.x, canvasPoint.y);
+                }
             });
         }
         
