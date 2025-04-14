@@ -35,6 +35,16 @@ document.addEventListener('DOMContentLoaded', function() {
         'Chinstrap': '#e74c3c'  // Rojo
     };
 
+    // Función generadora de números pseudoaleatorios a partir de una semilla (mulberry32)
+    function mulberry32(a) {
+        return function() {
+            var t = a += 0x6D2B79F5;
+            t = Math.imul(t ^ (t >>> 15), t | 1);
+            t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        }
+    }
+
     // Inicialización
     function init() {
         // Configurar tamaño del canvas
@@ -157,8 +167,13 @@ document.addEventListener('DOMContentLoaded', function() {
             yMin = Math.min(...allData.map(d => d.bill_depth_mm));
             yMax = Math.max(...allData.map(d => d.bill_depth_mm));
             
-            // División aleatoria en train/test (80/20)
-            const shuffled = [...allData].sort(() => 0.5 - Math.random());
+            // Obtener la semilla del input (default 42) y crear el generador
+            const seedInput = document.getElementById('seed-input');
+            const seed = parseInt(seedInput.value) || 42;
+            const seededRand = mulberry32(seed);
+            
+            // División aleatoria en train/test (80/20) usando el PRNG
+            const shuffled = [...allData].sort(() => seededRand() - 0.5);
             const testSize = Math.floor(shuffled.length * 0.2);
             
             testData = shuffled.slice(0, testSize);
@@ -334,6 +349,12 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('resize', function() {
             setupCanvas();
             drawPoints();
+        });
+
+        // Recargar datos al cambiar la semilla
+        const seedInput = document.getElementById('seed-input');
+        seedInput.addEventListener('change', function() {
+            loadCSVData('https://raw.githubusercontent.com/mwaskom/seaborn-data/master/penguins.csv');
         });
     }
     
