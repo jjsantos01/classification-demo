@@ -52,6 +52,34 @@
                     <span>Chinstrap</span>
                 </div>
             </div>
+        </div> <!-- Cierre de canvas-container -->
+
+        <!-- Nueva sección para matriz de confusión y métricas -->
+        <div class="confusion-matrix">
+            <h2>Matriz de Confusión</h2>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Predicho: Adelie</th>
+                    <th>Predicho: Chinstrap</th>
+                </tr>
+                <tr>
+                    <th>Real: Adelie</th>
+                    <td id="tp">TP</td>
+                    <td id="fp">FP</td>
+                </tr>
+                <tr>
+                    <th>Real: Chinstrap</th>
+                    <td id="fn">FN</td>
+                    <td id="tn">TN</td>
+                </tr>
+            </table>
+            <div class="metrics">
+                <p>Accuracy (TP + TN / Total Obs.): <span id="accuracy">-</span></p>
+                <p>Precisión (TP / (TP + FP)): <span id="precision">-</span> </p>
+                <p>Recall (TP / (TP + FN)): <span id="recall">-</span> </p>
+                <p>F1 (2 * (Precisión * Recall) / (Precisión + Recall)): <span id="f1">-</span></p>
+            </div>
         </div>
 
         <!-- Input de semilla para reproducibilidad -->

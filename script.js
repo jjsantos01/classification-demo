@@ -394,6 +394,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Manejo de eventos de ratón
     function handleMouseDown(e) {
+        if (!isDrawing) {
+            resetConfusionMatrix(); // Reinicia la matriz al comenzar un nuevo dibujo
+        }
         // Seleccionar solo el checkbox de entrenamiento
         showTrainCheckbox.checked = true;
         showTestCheckbox.checked = false;
@@ -578,16 +581,45 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         let correct = 0;
+        let tp = 0, tn = 0, fp = 0, fn = 0;
         
         testData.forEach(point => {
             const predicted = classifyPoint(point);
             if (predicted === point.species) {
                 correct++;
             }
+            // Se asume que "Adelie" es clase positiva
+            if (point.species === 'Adelie' && predicted === 'Adelie') {
+                tp++;
+            } else if (point.species === 'Chinstrap' && predicted === 'Chinstrap') {
+                tn++;
+            } else if (point.species === 'Chinstrap' && predicted === 'Adelie') {
+                fp++;
+            } else if (point.species === 'Adelie' && predicted === 'Chinstrap') {
+                fn++;
+            }
         });
         
-        const accuracy = (correct / testData.length * 100).toFixed(1);
-        testAccuracyEl.textContent = `${accuracy}%`;
+        const overallAccuracy = (correct / testData.length * 100).toFixed(1);
+        testAccuracyEl.textContent = `${overallAccuracy}%`;
+        
+        // Actualizar elementos de matriz de confusión
+        document.getElementById('tp').textContent = tp;
+        document.getElementById('tn').textContent = tn;
+        document.getElementById('fp').textContent = fp;
+        document.getElementById('fn').textContent = fn;
+        
+        // Calcular métricas usando valores decimales (notar que se multiplica por 100 para mostrar porcentajes)
+        const total = tp + tn + fp + fn;
+        const acc = total > 0 ? ((tp + tn) / total * 100).toFixed(1) : 0;
+        const precVal = (tp + fp) > 0 ? tp / (tp + fp) : 0;
+        const recVal = (tp + fn) > 0 ? tp / (tp + fn) : 0;
+        const f1Val = (precVal + recVal) > 0 ? (2 * precVal * recVal / (precVal + recVal)) : 0;
+        
+        document.getElementById('accuracy').textContent = `${acc}%`;
+        document.getElementById('precision').textContent = `${(precVal * 100).toFixed(1)}%`;
+        document.getElementById('recall').textContent = `${(recVal * 100).toFixed(1)}%`;
+        document.getElementById('f1').textContent = `${(f1Val * 100).toFixed(1)}%`;
     }
     
     // Función para dibujar las regiones de clasificación
@@ -610,6 +642,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }
+    }
+
+    // Agregar función para reiniciar valores de la matriz de confusión y métricas
+    function resetConfusionMatrix() {
+        document.getElementById('tp').textContent = 'TP';
+        document.getElementById('fp').textContent = 'FP';
+        document.getElementById('fn').textContent = 'FN';
+        document.getElementById('tn').textContent = 'TN';
+        document.getElementById('accuracy').textContent = '-';
+        document.getElementById('precision').textContent = '-';
+        document.getElementById('recall').textContent = '-';
+        document.getElementById('f1').textContent = '-';
     }
     
     // Iniciar la aplicación
