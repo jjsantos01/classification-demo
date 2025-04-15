@@ -336,6 +336,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Botón para borrar
         clearBtn.addEventListener('click', function() {
             clearClassifier();
+            resetConfusionMatrix();
         });
         
         // Botón para evaluar en datos de test
@@ -384,6 +385,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Limpiar el clasificador
     function clearClassifier() {
+        showTrainCheckbox.checked = true;
+        showTestCheckbox.checked = false;
+
         points = [];
         isDrawing = false;
         drawPoints();
